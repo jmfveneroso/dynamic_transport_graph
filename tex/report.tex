@@ -8,6 +8,7 @@
 \usepackage{lipsum}
 \usepackage{authblk}
 \usepackage{algorithm}
+\usepackage{amsmath}
 \usepackage[noend]{algpseudocode}
 \usepackage {tikz}
 \usetikzlibrary {positioning}
@@ -85,7 +86,7 @@ A complexidade de espaço do algoritmo original e da versão aprimorada é $ O(n
 \section{Programação Dinâmica}
 
 No problema do compartilhamento de viagens modelado em grafos, os vértices do grafo representam viagens e as arestas do grafo representam 
-compartilhamentos. Para fins de simplificação da explicação, consideremos que os vértices podem representar passageiros exclusivos, motoristas exclusivos 
+compartilhamentos. Cada vértice pode representar viagens com passageiros exclusivos, motoristas exclusivos 
 ou passageiros-motoristas. Em qualquer solução válida os passageiros-motoristas tem de decidir se vão
 atuar como passageiros ou motoristas devido às restrições do problema. Dessa forma, sendo k o número de passageiros-motoristas, 
 ao variar quais deles atuam como passageiros e quais atuam como motoristas, existem $ 2^k $ combinações possíveis que dão origem a problemas distintos. 
@@ -114,89 +115,75 @@ benefício do compartilhamento $ B(v_i, v_j) $ e o número de passageiros na via
 Perceba que os vértices A e C são passageiros-motoristas e os demais vértices são passageiros ou motoristas exclusivos. Ao selecionar 
 o vértice A como motorista e o vértice C como passageiro, podemos modelar o problema com o grafo bipartido da figura \ref{fig:bipartite_graph}.
 Para cada uma das combinações de passageiros e motoristas podemos construir um grafo bipartido similar. Nesta forma, o problema passa a se parecer
-bastante com o \textit{0-1 Multiple Knapsack Problem}, com a diferença que alguns items podem estar restritos à sacolas específicas. No caso, as sacolas
-representam os carros e os itens representam os grupos de passageiros. Ao definir a composição de benefício máximo para cada um destes problemas,
-basta escolher a composição de maior benefício para obter uma solução ótima para o problema completo.
+bastante com o \textit{0-1 Multiple Knapsack Problem}, com a diferença que alguns items podem estar restritos à sacolas específicas. 
+No caso, as sacolas representam os carros e os itens representam os grupos de passageiros.
+Além disso, é possível mapear o \textit{0-1 Multiple Knapsack Problem} no problema de compartilhamento de viagens se considerarmos 
+o caso em que todos os passageiros podem pegar carona em todos os veículos. Logo, o problema do compartilhamento de viagens é NP-difícil.
 
-Digamos que existem $ n $ grupos de passageiros $ {p_1, p_2, ..., p_n} $ e $ m $ carros $ {c_1, c_2, ..., c_m} $ no grafo bipartido, 
-sendo que $ |p_i| $ é o número de passageiros no grupo $ i $ e $ |c_j| $ é a capacidade máxima do carro $ j $. Agora, digamos
-que $ P_i = \{ p_1, p_2, ..., p_i \} $, $ C_j = \{ c_1), C(c_2), ..., C(c_j) \} $ e $ B*(P_i, C_j, |c_j|) $ é o conjunto de arestas de 
-benefício máximo para $ P_i $ e $ C_j $ onde a lotação do carro $ j $ é no máximo $ |c_j| $. Para calcular o 
-valor de $ B*(P_i, C_j, |c_j|) $ temos três possibilidades:
+Dado um grafo $ G(V,A)$, cada motorista $ v_j $ dá origem a um \textit{0-1 Knapsack Problem}. Pois, cada aresta $ (v_i, v_j) \in G.A $
+representa uma possbilidade do grupo de passageiros $ v_i $ seguir viagem com $ v_j $. E, para maximizar o benefício dos
+compartilhamentos do motorista $ B_{max}(G, v_j) $ é preciso escolher o conjunto de arestas $ (v_i, v_j) $ que confira o maior benefício
+sem exceder a capacidade do carro, que é basicamente a definição do \textit{0-1 Knapsack Problem}. No entanto, a forma como 
+um motorista maximiza o benefício dos seus compartilhamentos influencia como os outros motoristas podem
+maximizar os seus compartilhamentos. Logo, assumindo que o motorista $ v_j $ está levando o grupo de passageiros $ X $, o próximo
+motorista deverá maximizar seu benefício com base no grafo $ G'(V - X - v_j, A') $, sendo que $ A' $ é o conjunto de arestas original 
+$ A $ sem as arestas que contém $ v_j $ ou qualquer um dos passageiros levados. No caso de motoristas que podem ser passageiros,
+também existe a possibilidade do motorista $ v_j $ não levar passageiro nenhum. Nesse caso, as arestas incidentes em $ v_j $
+serão apagadas do grafo $ G $, mas as arestas que saem de $ v_j $ serão mantidas e, o vértice $ v_j $ também será mantido.
 
-\begin{enumerate}  
-\item o grupo de passageiros $ p_i $ viajará no carro $ c_j $
-\item o grupo de passageiros $ p_i $ viajará em algum carro no conjunto $ \{c_1, c_2, ..., c_{j - 1} \} $
-\item o grupo de passageiros $ p_i $ não viajará em nenhum carro
-\end{enumerate}
+Se o motorista $ v_j $ decide levar um passageiro $ v_i $, os demais motoristas vão maximizar seus benefícios sem considerar o 
+passageiro $ v_i $ no grafo. Por conta disso, o benefício encontrado não será necessariamente máximo. Por exemplo, tome o caso em que
+$ v_j $ pode levar um dos grupos de passageiros $ \{ p_1 = 12/2, p_2 = 20/1, p3 = 1/1 \} $ onde o primeiro valor associado a cada grupo representa o seu benefício
+e o segundo valor o número de pessoas naquele grupo (note que a barra não representa divisão nesse caso).
+Assumindo que $ v_j.capacidade = 2 $, $ v_j $ maximiza o benefício dos seus compartilhamentos se escolher os passageiros $ \{ p_2, p_3 \} $ auferindo um
+benefício total de $ 21 $. Agora assuma que existe um outro motorista $ v_{j+1} $ que pode compartilhar viagem apenas com $ p_2 $. Nesse caso,
+o motorista $ v_{j+1} $ ficará impedido de compartilhar essa viagem. No entanto, o benefício máximo dos compartilhamentos seria claramente 
+maior se $ v_j $ tivesse escolhido levar $ p_1 $ ao invés de $ \{ p_2, p_3 \} $. 
 
-Se $ |p_i| > |c_j|$ ou a aresta $ (p_i, c_j) $ não existe no grafo bipartido, então o caso 1 é impossível. 
-Caso contrário, o benefício máximo no caso 1 é $ B(p_i, c_j) + B*(P_{i-1}, C_j, |c_j| - |p_i|) $. Observe
-que a capacidade do carro $ j $ agora é $ |c_j| - |p_i| $, pois ele está incorporando o grupo de passageiros 
-$ p_i $ que possui $ |p_i| $ passageiros.
+Por conta da incapacidade de prever localmente qual é o benefício total máximo do plano de compartilhamento, é necessário testar 
+cada uma das combinações de $ k $ passageiros para o motorista $ v_j $ e escolher aquela que provê o benefício total máximo.
+Isto dá um total de $ 2^k $ combinações, onde, para cada combinação de passageiros, constrói-se um grafo $ G' $ sem aqueles passageiros
+e sem o motorista ou apenas sem as arestas dos passageiros se o motorista não for levar ninguém, como explicado anteriormente. 
+Então, calculamos o benefício máximo para o subgrafo $ G' $ e assim por diante. Sendo que cada combinação de passageiros em 
+cada motorista pode ter seu benefício máximo calculado pela resolução do \textit{0-1 Knapsack Problem}.
 
-No caso 2, o benefício máximo é $ B*(P_{i}, C_{j-1}, |c_{j-1}|) $, pois o grupo de passageiros $ p_i $ não 
-está indo no carro $ c_j $
+Finalmente, podemos construir a seguinte equação de recorrência:
 
-o caso 1 é impossível
+\begin{equation}
+  B_{max}(G, D_{j}) = 
+  \begin{cases}
+    0, & \textit{se $ G = \emptyset $}.\\
+    \max_{P_k \subseteq D_j.P} B_{max}(G', D_{j+1}) + B(P_k), & \textit{caso contrário}.\\
+  \end{cases}
+\end{equation}
 
-o benefício máximo será 
+onde $ P_k $ são todos as combinações de passageiros do motorista $ D_j $, onde $ P_k \subseteq D_j.passageiros \subseteq G.A $.
+$ G' $ depende da escolha dos passageiros como explicado nos parágrafos anteriores e $ B(P_k) $ é o somatório dos benefícios
+dos passageiros em $ P_k $. A ordem de escolha dos motoristas $ D_j $ não é importante uma vez que todas as possíveis combinações de
+passageiros acabam sendo testadas de uma forma ou de outra. No entanto, esta ordem será importante quando tratarmos da solução gulosa para o problema.
 
-sendo que todo carro possui uma capacidade
-sendo que toda aresta $ (p_i, c_j) $ liga um passageiro a um carro. 
+Perceba que para calcularmos o benefício máximo de $ G $ é necessário resolver maximizar os benefícios nos subproblemas $ G' $. 
+Ou seja, o problema tem subestrutura ótima. A prova deste postulado é que, se obtemos o benefício máximo em $ G $ com base
+em um $ B(G') $ cujo benefício não é máximo, então, podemos simplesmente substituir $ B(G') $ por $ B_{max}(G') $ e obter um benefício
+maior, contradizendo o fato de $ G $ ser máximo inicialmente. Portanto, $ B(G') $ tem de ser máximo.
+
+A implementação ingênua desta equação de recorrência acaba calculando várias vezes o mesmo problema, pois, um subgrafo $ G' $ pode ocorrer
+diversas vezes na árvore de recursão, mas o seu benefício máximo $ B_max(G') $ é sempre o mesmo. Portanto, podemos ganhar eficiência ao
+salvar os resultados dos cálculos anteriores do \textit{0-1 Knapsack Problem}. Além disso, podemos utilizar uma abordagem de programação
+dinâmica para resolver o próprio \textit{0-1 Knapsack Problem}.
+
+O \textit{0-1 Knapsack Problem} pode ser resolvido de forma simples gerando uma tabela onde as linhas representam os passageiros
+$ \{ p_1, p_2, ..., p_n\} \in D_j.P $ e as colunas representam a capacidade de $ D_j $ de 1 até $ D_j.capacidade $. Então, calculamos
+para cada linha, o benefício máximo com cada uma das colunas de capacidade. Na próxima linha, verificamos se podemos incluir o próximo passageiro 
+para cada uma das capacidades e, se isso não for possível, repetimos o valor da célula de cima. Se for possível incluir o passageiro, então
+verificamos o valor da linha de cima com a capacidade da coluna atual menos o número de passageiros adicionados. Devido a uma limitação
+de espaço este algoritmo não será explicado em mais detalhes. No entanto, o código implementa ele conforme os passos aqui descritos.
+
+No caso do cálculo do benefício máximo, podemos seguir uma abordagem \textit{Bottom Up}. Digamos que $ D = {D_1, D_2, ..., D_n} $ é
+a lista dos motoristas no grafo G.
 
 
-Para cada aresta do grafo bipartido $ (v_i, v_j) $ que representa
-O problema descrito acima Subestrutura ótima
 
 
-sobreposição de subproblemas
-
-K matrizes com P linhas e C colunas.
-K = motoristas
-P = passageiros (p1, p2, p3, ..., pn)
-C = capacidade do carro
-
-
-
-% Cada célula da matriz Kn[i][j] guarda o benefício máximo dado que os passageiros p1, p2, ..., p_i já foram alocados entre os carros k1, k2, ..., k_n. 
-% 
-% Para calcular Kn[i][j] primeiro colocamos o passageiro p_i no carro k_n e calculamos o beneficio desta escolha com a expressão p_i.benefit + Kn[i - 1][j - p_i.weight]. Sendo que, se i - 1 = 0 a expressão é somente p_i.benefit e se p_i.weight >= C_j a expressão é 0.
-% 
-% Tendo calculado o benefício, é necessário comparar a escolha com o benefício máximo em outras posições.
-% 
-% Primeiro, verificamos se Kn[i-1][j] tem um benefício maior. Nesse caso, não vale a pena colocar o passageiro p_i no carro. Ficamos com Kn[i-1][j].
-% 
-% Segundo, verificamos se Kn[i][j - 1] é maior.
-% 
-% Terceiro, temos que verificar se vale mais a pena colocar o passageiro em qualquer outro carro K_{n - 1}, K_{n - 2}, etc. Se K_{n - 1}[i][max_capacity] > Kn[i][j]. Ficamos com K_{n - 1}[i][max_capacity].
-% 
-% Podemos calcular as matrizes na seguinte ordem:
-% 
-% Para passageiros 1 a n
-%     Para carros 1 a K
-%        Para capacidades 0 a K_n.capacity
-% 
-% Resta provar que essa recursão garante sempre a melhor escolha.
-% 
-% Se 
-% 
-% Suponha que a aresta A pertence a solução de benefício máximo, mas k[i][j - A.weight]
-% não é máximo. Então, seria possível achar uma configuração cujo valor seria maior do que k[i][j - A.weight], mas nesse caso poderíamos substituir essa configuração em k[i][j] gerando um benefício maior, mas nesse caso, k[i][j] não seria máximo o que contradiz nossa hipótese inicial.
-% 
-% Agora suponha que o passageiro não vai em nenhum outro carro e k[i-1][j] não é máximo. Então existe uma configuração em que o passageiro p_i não vai em nenhum carro cujo benefício máximo é maior do que k[i-1][j], mas nesse caso poderíamos substituir essa configuração em k[i][j] e o benefício seria maior, contradizendo a hipótese que k[i][j] era máximo.
-% 
-% Suponha que k[i][j] é uma configuração de benefício máximo e o passageiro p_i vai pegar carona com em um outro carro k_n e suponha que k_n[i][max_capacity] não tem benefício máximo. Nesse caso, como nos exemplos anteriores podemos tomar uma outra configuração onde max_benefit > k_n[i][max_capacity] e substituir em k[i][j] resultando em uma configuração de maior benefício máximo o que contradiz a hipótese que k[i][j] era uma configuração de benefício máximo.
-% 
-% Isso conclui a prova.
-% 
-% 
-% Greedy
-% Ordene os carros por capacidade
-% Ordene os passageiros por beneficio / peso 
-% Para cada carro, escolha os passageiros com maior razão benefício / peso até estourar o limite do carro.
-% 
-% Para provar que não chega na solução, basta tomar um grafo em q cada passageiro está ligado a um único carro e basta construir um exemplo que não chegue a um resultado otimo no 0-1 knapsack.
-% 
 
 \end{document}

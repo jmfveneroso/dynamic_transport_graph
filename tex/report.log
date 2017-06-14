@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  13 JUN 2017 14:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  14 JUN 2017 00:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -845,6 +845,64 @@ Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 \@float@every@algorithm=\toks37
 \c@algorithm=\count120
 )
+(/usr/local/texlive/2016/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2016/03/10 v2.15b AMS math features
+\@mathmargin=\skip49
+
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2016/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01 AMS text
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks38
+\ex@=\dimen172
+))
+(/usr/local/texlive/2016/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen173
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count121
+LaTeX Info: Redefining \frac on input line 199.
+\uproot@=\count122
+\leftroot@=\count123
+LaTeX Info: Redefining \overline on input line 297.
+\classnum@=\count124
+\DOTSCASE@=\count125
+LaTeX Info: Redefining \ldots on input line 394.
+LaTeX Info: Redefining \dots on input line 397.
+LaTeX Info: Redefining \cdots on input line 518.
+\Mathstrutbox@=\box41
+\strutbox@=\box42
+\big@size=\dimen174
+LaTeX Font Info:    Redeclaring font encoding OML on input line 634.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 635.
+\macc@depth=\count126
+\c@MaxMatrixCols=\count127
+\dotsspace@=\muskip10
+\c@parentequation=\count128
+\dspbrk@lvl=\count129
+\tag@help=\toks39
+\row@=\count130
+\column@=\count131
+\maxfields@=\count132
+\andhelp@=\toks40
+\eqnshift@=\dimen175
+\alignsep@=\dimen176
+\tagshift@=\dimen177
+\tagwidth@=\dimen178
+\totwidth@=\dimen179
+\lineht@=\dimen180
+\@envbody=\toks41
+\multlinegap=\skip50
+\multlinetaggap=\skip51
+\mathdisplay@stack=\toks42
+LaTeX Info: Redefining \[ on input line 2739.
+LaTeX Info: Redefining \] on input line 2740.
+)
 (/usr/local/texlive/2016/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
 Package: algpseudocode 
 
@@ -852,16 +910,16 @@ Package: algpseudocode
 Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count121
-\c@ALG@rem=\count122
-\c@ALG@nested=\count123
-\ALG@tlm=\skip49
-\ALG@thistlm=\skip50
-\c@ALG@Lnr=\count124
-\c@ALG@blocknr=\count125
-\c@ALG@storecount=\count126
-\c@ALG@tmpcounter=\count127
-\ALG@tmplength=\skip51
+\c@ALG@line=\count133
+\c@ALG@rem=\count134
+\c@ALG@nested=\count135
+\ALG@tlm=\skip52
+\ALG@thistlm=\skip53
+\c@ALG@Lnr=\count136
+\c@ALG@blocknr=\count137
+\c@ALG@storecount=\count138
+\c@ALG@tmpcounter=\count139
+\ALG@tmplength=\skip54
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
 )
@@ -871,32 +929,32 @@ File: tikzlibrarypositioning.code.tex 2008/10/06 v3.0.1a (rcs-revision 1.7)
 ) (./report.aux)
 \openout1 = `report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
 
 (/usr/local/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count128
-\scratchdimen=\dimen172
-\scratchbox=\box41
-\nofMPsegments=\count129
-\nofMParguments=\count130
-\everyMPshowfont=\toks38
-\MPscratchCnt=\count131
-\MPscratchDim=\dimen173
-\MPnumerator=\count132
-\makeMPintoPDFobject=\count133
-\everyMPtoPDFconversion=\toks39
+\scratchcounter=\count140
+\scratchdimen=\dimen181
+\scratchbox=\box43
+\nofMPsegments=\count141
+\nofMParguments=\count142
+\everyMPshowfont=\toks43
+\MPscratchCnt=\count143
+\MPscratchDim=\dimen182
+\MPnumerator=\count144
+\makeMPintoPDFobject=\count145
+\everyMPtoPDFconversion=\toks44
 ) (/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2016/05/10 v0.21 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -949,16 +1007,12 @@ ABD: EveryShipout initializing macros
 Package pgfplots Warning: running in backwards compatibility mode (unsuitable t
 ick labels; missing features). Consider writing \pgfplotsset{compat=1.13} into 
 your preamble.
- on input line 17.
+ on input line 18.
 
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 36.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 36.
 [1
 
 {/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (10.18625pt too wide) in paragraph at lines 72--76
+Overfull \hbox (10.18625pt too wide) in paragraph at lines 73--77
 \T1/cmr/m/n/10 uma rota, por-tanto, qual-quer com-bi-nação $\OML/cmm/m/it/10 G[
 ]$ \T1/cmr/m/n/10 onde ex-i-s-tirem arestas $\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 
 u; v[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 (\OML/cmm/m/it/10 u; 
@@ -968,57 +1022,46 @@ v[]\OT1/cmr/m/n/10 ) :
 [2] <graph.png, id=28, 256.96pt x 256.96pt>
 File: graph.png Graphic file (type png)
  <use graph.png>
-Package pdftex.def Info: graph.png used on input line 98.
+Package pdftex.def Info: graph.png used on input line 99.
 (pdftex.def)             Requested size: 128.48047pt x 128.47968pt.
 
 <bipartite_graph.png, id=29, 256.96pt x 256.96pt>
 File: bipartite_graph.png Graphic file (type png)
  <use bipartite_graph.png>
-Package pdftex.def Info: bipartite_graph.png used on input line 105.
+Package pdftex.def Info: bipartite_graph.png used on input line 106.
 (pdftex.def)             Requested size: 164.6156pt x 164.6185pt.
 
-[3 <./graph.png (PNG copy)> <./bipartite_graph.png (PNG copy)>]
-Overfull \hbox (16.09239pt too wide) in paragraph at lines 121--126
-[]\T1/cmr/m/n/10 Digamos que ex-is-tem $\OML/cmm/m/it/10 n$ \T1/cmr/m/n/10 gru-
-pos de pas-sageiros $[]$ e $\OML/cmm/m/it/10 m$ \T1/cmr/m/n/10 car-ros $[]$
- []
-
-
-Overfull \hbox (0.28648pt too wide) in paragraph at lines 129--130
-[]\T1/cmr/m/n/10 o grupo de pas-sageiros $\OML/cmm/m/it/10 p[]$ \T1/cmr/m/n/10 
-vi-a-jará em al-gum carro no con-junto $[]$ 
- []
-
-[4] (./report.aux) ) 
+[3 <./graph.png (PNG copy)> <./bipartite_graph.png (PNG copy)>] [4] [5]
+(./report.aux) ) 
 Here is how much of TeX's memory you used:
- 22883 strings out of 493014
- 584899 string characters out of 6133351
- 817896 words of memory out of 5000000
- 26025 multiletter control sequences out of 15000+600000
- 10377 words of font info for 23 fonts, out of 8000000 for 9000
+ 23495 strings out of 493014
+ 591866 string characters out of 6133351
+ 828377 words of memory out of 5000000
+ 26616 multiletter control sequences out of 15000+600000
+ 13739 words of font info for 29 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,6n,77p,728b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/cm-supe
-r/cm-super-t1.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmex10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmmi10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmmi5.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmmi7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy1
-0.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.
-pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pf
-b></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb>
-</usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfcc1000.pfb></
-usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></us
-r/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/
-local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/lo
-cal/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/loca
-l/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb>
-Output written on report.pdf (4 pages, 225244 bytes).
+ 62i,12n,77p,728b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/cm-super/cm
+-super-t1.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmex10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmmi10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmmi5.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+mi7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr1
+0.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.p
+fb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
+b></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
+</usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></
+usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></us
+r/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfcc1000.pfb></usr/
+local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/lo
+cal/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/loca
+l/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/
+texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/te
+xlive/2016/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb>
+Output written on report.pdf (5 pages, 234131 bytes).
 PDF statistics:
- 87 PDF objects out of 1000 (max. 8388607)
- 62 compressed objects within 1 object stream
+ 90 PDF objects out of 1000 (max. 8388607)
+ 64 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  23 words of extra memory for PDF output out of 10000 (max. 10000000)
 
