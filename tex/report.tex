@@ -262,7 +262,13 @@ vezes. Portanto, a complexidade do algoritmo é $ n2^n2^n + 2^n = n2^{2n} + 2^n 
 do algoritmo é $ O(n2^n) $ como exposto anteriormente, mas podemos reduzí-la para $ O(2^n) $ se salvarmos apenas a linha anterior
 em cada iteração e, na iteração final, podemos simplesmente escolher a combinação que dê o benefício máximo sem salvar
 as respostas para cada combinação. Não é uma solução muito eficiente, mas já é bem melhor do que o algoritmo de força bruta. Devido 
-ao fato do problema do compartilhamento de viagens ser NP-difícil, todas as soluções serão de ordem exponencial se $ P \neq NP $.
+ao fato do problema do compartilhamento de viagens ser NP-difícil, todas as soluções serão de ordem exponencial.
+
+Para encontrar a configuração que gerou o benefício máximo, basta salvar o valor $ j $ da linha anterior
+sempre que acharmos uma configuração de benefício maior. Então, começando de trás para frente é só conferir quais vértices
+foram adicionados entre o melhor $ j $ da linha anterior e o $ j $ atual. Assim, saberemos que os elementos adicionados
+são os passageiros do motorista da linha atual. Para guardar os valores dos $ j $ anteriores precisaremos de uma tabela
+com o mesmo tamanho de $ B_{max} $. O código referente a este trabalho está implementado conforme descrito neste parágrafo.
 
 \section{Algoritmo Guloso}
 

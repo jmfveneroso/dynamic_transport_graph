@@ -217,6 +217,5 @@ if len(sys.argv) != 3:
   sys.exit()
 
 ReadInput(sys.argv[1])
-
 max_benefit = DPMaxBenefit() 
 WriteOutput(sys.argv[2])
