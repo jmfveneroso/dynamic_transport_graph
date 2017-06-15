@@ -143,7 +143,7 @@ qual o benefício máximo para cada combinação de vértices no grafo $ G $. Co
 Agora, assuma uma combinação de passageiros válida em $ D_i $ que faz parte de um plano de benefício máximo $ B_{max}(G, D_i) $ 
 e remova de G todos os passageiros escolhidos por $ D_i $ e o próprio motorista $ D_i $, gerando o grafo $ G' $. Ora,
 $ B_{max}(G, D_{i}) = B(D_i) + B_{max}(G', D_{i - 1}) $, onde $ B(D_i) $ é a soma dos benefícios dos passageiros de $ D_i $.
-Ou seja, o problema tem subestrutura ótima. A prova deste postulado é que, se $ B(G, D_{i}) $ é ótimo mas a configuração que gera
+Ou seja, o problema tem subestrutura ótima. A prova deste teorema é que, se $ B(G, D_{i}) $ é ótimo mas a configuração que gera
 o benefício $ B(G', D_{i - 1}) $ não é máxima, poderíamos substituí-la por uma configuraçãp que gerasse um benefício total
 maior, no entanto, isso contradiz a hipótese inicial que $ B_{max}(G, D_{i}) $ era máximo. Então, $ B_{max}(G, D_{i}) $ tem de ser
 máximo.
@@ -156,17 +156,17 @@ de recorrência:
   B_{max}(G, D_i) = 
   \begin{cases}
     0, & \textit{se $ G = \emptyset $}.\\
-    \max\limits_{P_{comb} \subseteq D_i.Passageiros} B_{max}(G', D_{i-1}) + \Sum_{P \in P_{comb}} B(P), & \textit{caso contrário}.\\
+    \max\limits_{P_{comb} \subseteq D_i.P} B_{max}(G', D_{i-1}) + \sum\limits_{p \in P_{comb}} B(p), & \textit{caso contrário}.\\
   \end{cases}
 \end{equation}
 
-onde $ P_{comb} $ representa todos as combinações de passageiros do motorista $ D_j $, onde $ P_k \subseteq D_j.passageiros \subseteq G.A $.
-$ G' $ depende da escolha dos passageiros como explicado nos parágrafos anteriores e $ B(P) $ é o benefício do passageiro P.
-A ordem de escolha dos motoristas $ D_j $ não é importante uma vez que todas as possíveis combinações de
-passageiros acabam sendo testadas de uma forma ou de outra. No entanto, esta ordem será importante quando tratarmos da solução gulosa para o problema.
+onde $ P_{comb} $ representa uma das combinações de passageiros do motorista $ D_i $, e $ D.P $ são todos os potencias passageiros do
+motorista $ D_i $ no grafo $ G $. $ G' $ depende da escolha dos passageiros como explicado nos parágrafos anteriores e $ B(P) $ é o benefício do passageiro P.
+A ordem de escolha dos motoristas $ D_i $ não é importante uma vez que todas as possíveis combinações de
+passageiros acabam sendo testadas de uma forma ou de outra. 
 
 A implementação ingênua desta equação de recorrência acaba calculando várias vezes o mesmo problema, pois, o poblema $ B(G, D_i) $ 
-pode ocorrer diversas vezes na árvore de recursão. Portanto, podemos ganhar eficiência ao
+pode ocorrer mais de uma vez na árvore de recursão. Portanto, podemos ganhar eficiência ao
 salvar os resultados dos cálculos em uma tabela.
 
 % O \textit{0-1 Knapsack Problem} pode ser resolvido de forma simples gerando uma tabela onde as linhas representam os passageiros
@@ -185,8 +185,8 @@ dependem de sua solução. Podemos produzir uma matriz $ B_{max} $ com $ n $ lin
 de motoristas e $ 2^n $ colunas representando todas as possíveis combinações $ V_j \subseteq G.V $, sendo que os índices 
 são a codificação binária das combinações. Por exemplo, $ \{ 0 \Rightarrow \emptyset, 1 \Rightarrow \{ V_1\},
 2 \Rightarrow \{ V_2\}, 3 \Rightarrow \{ V_1, V_2\}, ... \} $. Cada célula $ B_{max}[i][j] $ representa o benefício máximo
-considerando apenas os motoristas $ \{ D_1, D_2, ..., D_i \} $ no grafo $ G' $ onde $ G'.v_k \in V_j \forall G'.v_k \in G'.V $.
-O tamanho total da matriz $ B_{max} $ será $ O(n2^n) $ sendo $ n $ o número de vértices no grafo $ G $.
+considerando apenas os motoristas $ \{ D_1, D_2, ..., D_i \} $ no grafo $ G' $ onde $ v_k \in V_j \forall v_k \in G'.V $.
+O tamanho total da matriz $ B_{max} $ será $ O(n2^n) $ sendo $ n $ o número de vértices do grafo $ G $.
 
 \begin{algorithm}
 \caption{DPMaximizeBenefit}
@@ -196,7 +196,6 @@ O tamanho total da matriz $ B_{max} $ será $ O(n2^n) $ sendo $ n $ o número de
 \State $ Drivers := GetDrivers(G) $
 \State $ B_{max} := Array[Drivers.length] $
 \State $ Combinations := |G.V|^2 $
-
 \State $ i := 0 $
 \item \ForAll{$ i < Drivers.length $}
   \State $ B_{max}[i] := Array[Combinations] $
@@ -205,26 +204,37 @@ O tamanho total da matriz $ B_{max} $ será $ O(n2^n) $ sendo $ n $ o número de
 \item \ForAll{$ D_i \in Drivers $}
   \ForAll{$ V_j \subseteq G.V $}
     \If {$ D_i \in V_j $}
-      \State $ Benefit := 0 $
-
-      \State $ Solution := \textit{0-1 Knapsack}(D_i, V_j) $
-      \ForAll{$ v_k \in Solution $}
-        \State $ Benefit := Benefit + B(v_k, D_i) $
-        \State $ G.V := G.V - \{ v_k \} $
-      \EndFor
-      
-      \If {$ Solution \neq \emptyset $}
-        \State $ G.V := G.V - \{ D_i \} $
+      \State $ MaxBenefit := 0 $
+      \If {$ i > 0 $}
+      \State $ MaxBenefit := B_{max}[i-1][j] $
+      \Comment Benefit without adding any passengers.
       \EndIf
 
-      \State $ CombinationIndex := GetCombinationIndex(G.V) $
-      \State $ Benefit := Benefit + B_{max}[i - 1][CombinationIndex] $
+      \State Remove $ D_i $ from $ G.V $
+      \ForAll{$ P_{comb} \subseteq D_i.P $}
+        \State $ Benefit := 0 $
+        \ForAll{$ p \in P_{comb} $}
+          \State $ Benefit := Benefit + B(p) $
+          \State Remove $ p $ from $ G.V $
+        \EndFor
+       
+        \State $ CombIndex := GetCombIndex(G.V) $
+        \State $ Benefit := Benefit + B_{max}[i - 1][CombIndex] $
+        \If {$ Benefit > MaxBenefit $}
+          \State $ MaxBenefit := Benefit $
+        \EndIf
 
-      \State Replace all removed vertices in graph G
-      
-      \State $ B_{max}[D_j][P_{comb}] = Benefit $  
+        \State Add $ D_i $ back to $ G.V $
+        \ForAll{$ p \in P_{comb} $}
+          \State $ Benefit := Benefit + B(p) $
+          \State Add $ p $ back to $ G.V $
+        \EndFor
+      \EndFor
     \Else
-      \State $ B_{max}[i][j] = B_{max}[i-1][j] $  
+      \State $ B_{max}[i][j] = 0 $  
+      \If {$ i > 0 $}
+        \State $ B_{max}[i][j] = B_{max}[i-1][j] $  
+      \EndIf
     \EndIf
   \EndFor
 \EndFor
@@ -237,42 +247,45 @@ O tamanho total da matriz $ B_{max} $ será $ O(n2^n) $ sendo $ n $ o número de
   \EndIf
 \EndFor
 
+\Return $ MaxBenefit $
 \EndProcedure
 \end{algorithmic}
 \label{alg:dynamic_programming}
 \end{algorithm}
 
 Finalmente, o algoritmo para a abordagem \textit{Bottom Up} está descrito em \ref{dynamic_programming}. Os
-nomes de todas as variáveis são equivalentes aos definidos nos últimos parágrafos. A função \textit{0-1 Knapsack$(D_i, V_j)$}
-resolve o \textit{0-1 Knapsack Problem} sendo $ D_i $ a sacola com capacidade $ D_i.capacidade $ e sendo $ V_j $ os
-itens que podem ser colocados na sacola, atentando para o fato que só são considerados os vértices de $ V_j $ que podem
-ser passageiros de $ D_i $. A função \textit{GetCombinationIndex(G.V)} simplesmente retorna o índice $ j $ equivalente
-a combinação de vértices em $ G.V $. A complexidade deste algoritmo é $ O(n2^nO(0-1 Knapsack Problem(n)) $. Não é uma
-solução muito eficiente, mas devido ao fato do algoritmo ser NP-difícil, todas as soluções serão de ordem exponencial.
+nomes de todas as variáveis são equivalentes aos definidos nos últimos parágrafos. A única informação nova é a 
+função \textit{GetCombIndex(G.V)} que retorna o índice $ j $ na tabela $ B_{max} $ para o subconjunto de vértices do grafo $ G $.
+Para $ n $ igual ao número de vértices no grafo $ G $, o loop principal é chamado no máximo $ n $ vezes. O loop secundário é chamado 
+exatamente $ 2^n $ vezes e o terceiro loop é chamado no máximo $ 2^n $ vezes. Por último, o loop final é chamado exatamente $ 2^n $
+vezes. Portanto, a complexidade do algoritmo é $ n2^n2^n + 2^n = n2^{2n} + 2^n $ e o algoritmo é $ O(n4^n) $. A complexidade de espaço
+do algoritmo é $ O(n2^n) $ como exposto anteriormente, mas podemos reduzí-la para $ O(2^n) $ se salvarmos apenas a linha anterior
+em cada iteração e, na iteração final, podemos simplesmente escolher a combinação que dê o benefício máximo sem salvar
+as respostas para cada combinação. Não é uma solução muito eficiente, mas já é bem melhor do que o algoritmo de força bruta. Devido 
+ao fato do problema do compartilhamento de viagens ser NP-difícil, todas as soluções serão de ordem exponencial se $ P \neq NP $.
 
 \section{Algoritmo Guloso}
 
-Nesta seção será descrito um algoritmo que utiliza uma estratégia gulosa para escolher a ordem dos motoristas no algoritmo
-da seção anterior e que também utiliza uma estratégia gulosa para resolver o \textit{0-1 Knapsack Problem}. Começemos pela
-resolução guloso do \textit{0-1 Knapsack Problem}.
-
-Os itens da sacola (passageiros) serão ordenados por ordem não crescente de eficiência, sendo que eficiência é definida por:
+O algoritmo guloso para o problema do compartilhamento de viagens o problema de escolher o subconjunto ótimo de passageiros para
+cada motorista a cada iteração como uma instância separada do \textit{0-1 Knapsack Problem}. Basicamente, os itens da sacola (passageiros) 
+serão ordenados por ordem não crescente de eficiência, sendo que a eficiência é definida por:
 
 \[ 
-\frac{benefício}{número de passageiros na viagem}
+\frac{\textit{benefício}}{\textit{número de passageiros na viagem}}
 \]
 
-a estratégia gulosa vai escolher os itens nesta ordem até que o carro não comporte mais nenhum passageiro. Adicionalmente,
+A estratégia gulosa vai escolher os itens nesta ordem até que o carro não comporte mais nenhum passageiro. Adicionalmente,
 conferimos se colocar apenas o passageiro de maior benefício dentro do carro vai conferir um benefício maior do que a estratégia
-descrita e, se este for o caso, substituímos os passageiros escolhidos pelo passageiro de maior benefício. Esta estratégoa não
-garante uma resolução ótima para o problema, mas é bastante rápida com complexidade $ O(nlogn) $.
+descrita e, se este for o caso, substituímos os passageiros escolhidos pelo passageiro de maior benefício. Essa estratégia não
+garante uma solução ótima para o problema, mas é bastante rápida e tem complexidade $ O(nlogn) $ devido à ordenação dos passageiros.
 
-Agora, dado um grafo $ G $, escolheremos o motorista cujo benefício calculado pelo \textit{0-1 Knapsack Problem} é o maior entre
-todos os motoristas do grafo. Então, adicionamos o benefício obtido ao benefício total e retiramos tanto o motorista quanto todos
-os passageiros escolhidos e suas arestas do grafo $ G $, produzindo o grafo $ G' $. Repetimos o processo até que não haja mais 
-motoristas no grafo e então obtemos o benefício total. Da mesma forma que o \textit{0-1 Knapsack Problem}, esta estratégia não
-produz necessariamente um resultado ótimo, mas a sua complexidade é $ O(n^3logn) $ onde n é o número de vértices no grafo. O que é
-consideravelmente melhor do que a estratégia de força bruta ou a abordagem de programação dinâmica.
+Dado um grafo $ G $, escolheremos o motorista cujo benefício calculado pelo \textit{0-1 Knapsack Problem} é o maior entre
+todos os motoristas do grafo. Então, adicionamos o benefício obtido ao benefício total e retiramos as arestas 
+que saem dos passageiros e do motorista do grafo $ G $, produzindo o grafo $ G' $. Repetimos o processo até que não haja mais 
+motoristas no grafo e, ao final do processo, obtemos o benefício total. Da mesma forma que o \textit{0-1 Knapsack Problem}, esta estratégia não
+produz necessariamente um resultado ótimo. No entanto, a complexidade para a escolha do motorista é $ n^2logn $ e este processo é repetido
+no máximo $ n $ vezes, portanto, a complexidade do algoritmo é $ O(n^3logn) $, que é polinomial e, portanto, consideravelmente melhor do 
+que as alternativas exatas.
 
 \begin{algorithm}
 \caption{GreedyMaximizeBenefit}
@@ -296,7 +309,7 @@ consideravelmente melhor do que a estratégia de força bruta ou a abordagem de 
   \EndFor
 
   \State Update Plan with the edges in BestPlan
-  \State Remove inbound and outbound edges from best driver in graph G
+  \State Remove edges from best driver and all passengers in graph G
   \State $ MaxBenefit = MaxBenefit + MaxDriverBenefit $
 \EndWhile
 

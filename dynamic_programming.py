@@ -1,150 +1,48 @@
 import sys
 import time
 import random
-
-# Constants.
-DRIVER = -2
-WALKER = -1
-
-# This variable holds all trip vertices. This is our representation of
-# the graph model.
-graph = {}
-
-# This variable keeps track of the maximum benefit achieved by any
-# valid configuration.
-max_benefit = -1
+import numpy as np
 
 # Vertex: each trip is an instance of the vertex class.
 class Vertex:
-  trip_id = -1 # Valid values have to be positive.
-  benefit = 0
-  num_passengers = 0
-  vacant_seats = 0
-  occupied_seats = 0
-  extra_passengers = []
-
-  # True if this vertex is a driver but is not a passenger.
-  is_exclusive_driver = False
-
-  # The cursor holds the position of the current active edge in the adjacency list.
-  cursor = 0
-
-  # This variable holds the cursor position that achieved maximum benefit.
-  saved_cursor = 0
-
-  # Adjacency list for this vertex.
-  adj_list = []
-
-  def __init__(self, trip_id, passenger = True, driver = True, num_passengers = 1, vacant_seats = 2, benefit = 2):
+  def __init__(self, trip_id, passenger = True, driver = True, num_passengers = 0, vacant_seats = 0, benefit = 0):
     self.adj_list = []
-
-    # Beyond all possible sharing combinations, passengers can still walk to
-    # their destination and passenger-drivers can decide to drive. These possibilities are
-    # represented by the global unique values DRIVER AND WALKER.
-    if driver: self.adj_list.append(DRIVER)
-    if passenger: self.adj_list.append(WALKER)
-
     self.trip_id = trip_id
     self.num_passengers = num_passengers
     self.vacant_seats = vacant_seats - num_passengers
     self.benefit = benefit
-    self.occupied_seats = 0
-    self.cursor = 0
-    self.is_exclusive_driver = driver and not passenger
-    self.extra_passengers = []
-
-  # Any vertex can be a walker, a passenger or a driver. Positive values are
-  # always passengers that are going to take a lift with someone else. Negative
-  # values can represent a walker or a driver. For passengers, this function returns 
-  # the trip id of the driver, for walkers or drivers it returts -2 or -1.
-  def GetRole(self):
-    return self.adj_list[self.cursor]
-
-  # The cursor is incremented to create all possible combinations of
-  # active edges.
-  def IncreaseCursor(self):
-    if self.cursor == len(self.adj_list) - 1:
-      self.cursor = 0
-      return False
-    else:
-      self.cursor += 1
-      return True
-
-  # A vertex is only valid if it is a walker, a driver with a feasible number of 
-  # occupied seats, or a passenger in another trip with a valid driver.
-  def IsValid(self):
-    if self.GetRole() == DRIVER: return self.occupied_seats <= self.vacant_seats
-    return self.GetRole() == WALKER or graph[self.GetRole()].GetRole() == DRIVER
-
-  # Only passengers in other trips sum up to the total benefit.
-  def GetBenefit(self):
-    return self.benefit if self.GetRole() > 0 else 0
-
-  # Saves the current cursor so we can know the configuration that achieved maximum
-  # benefit.
-  def SaveCursor(self):
-    self.saved_cursor = self.cursor
-
-  # Updates the number of occupied seats in every trip with a driver.
-  def OccupySeats(self):
-    if self.GetRole() >= 0:
-      graph[self.GetRole()].occupied_seats += self.num_passengers
+    self.benefit = benefit
+    self.driver = driver
+    self.passenger = passenger
+    self.final_passengers = []
+    self.activated = True
 
   # Adds an edge representing a sharing possibility.
   def AddSharing(self, sharing):
-    if self.is_exclusive_driver: return
     self.adj_list.append(sharing)
 
-  # Keeps track of which trips take which passengers. This is only used to properly print
-  # the final result.
-  def AddPassenger(self, passenger_id):
-    self.extra_passengers.append(str(passenger_id))
+  def GetPassengerCombinations(self, i = 0):
+    if (i >= len(self.adj_list)):
+      return [[]];
 
-# Active edges are incremented in a way to make every possible combination of active 
-# vertices occur a single time.
-def IncreaseCursor():
-  for key in reversed(graph.keys()):
-    if graph[key].IncreaseCursor(): return True
-  return False
+    new_combs = []
+    combs = self.GetPassengerCombinations(i + 1)
+    for comb in combs:
+      new_combs.append(comb)
+      new_combs.append([self.adj_list[i]] + comb)
 
-# Checks if a given configuration of active vertices is valid.
-def CheckValidity():
-  for i in graph.keys():
-    if not graph[i].IsValid(): return False
-  return True 
+    return new_combs
 
-# Sums up the benefits of each trip to find the total benefit of this configuration.
-def GetTotalBenefit():
-  global max_benefit
-  total_benefit = 0
-  for i in graph.keys():
-    total_benefit += graph[i].GetBenefit()
-  if total_benefit > max_benefit: 
-    max_benefit = total_benefit
+  def SetFinalPassengers(self, passengers):
+    for p in passengers:
+      if p.trip_id != self.trip_id:
+        self.final_passengers.append(p.trip_id)
+    self.final_passengers.sort()
 
-    # Record the maximum benefit configuration.
-    for i in graph.keys(): graph[i].SaveCursor()
-  return total_benefit
-
-# Activates the vertices with maximum benefit and keeps track of which passengers go
-# in which trip to print the final result.
-def LoadSavedCursors():
-  for i in graph.keys(): 
-    graph[i].cursor = graph[i].saved_cursor
-    if graph[i].GetRole() >= 0:
-      passenger_id = graph[i].trip_id
-      driver_id = graph[i].GetRole()
-      graph[driver_id].AddPassenger(passenger_id)
-
-# This is the main function. It tries every possible configuration of active edges and
-# records the one with the maximum benefit.
-def CalculateMaxBenefit():
-  while True:
-    if CheckValidity():
-      GetTotalBenefit()
-    for i in graph.keys(): graph[i].occupied_seats = 0
-    if not IncreaseCursor(): break;
-    for i in graph.keys(): graph[i].OccupySeats()
+# This variable holds all trip vertices. This is our representation of
+# the graph model.
+graph = {}
+max_benefit = -1
 
 # Reads input from file and creates the sharing graph.
 def ReadInput(filename):
@@ -166,26 +64,148 @@ def ReadInput(filename):
   for i in range(num_sharings):
     arr = lines[num_trips + 2 + i].split()
 
-    trip_id = arr[0]
-    shared_trip_id = arr[1]
-    graph[trip_id].AddSharing(shared_trip_id)
+    passenger_id = arr[0]
+    driver_id = arr[1]
 
-# Writes the final result to an output file.
+    # We are actually building the transposed graph here. Because
+    # we need to know from the perspective of each driver, which
+    # passengers she will be taking.
+    if graph[passenger_id].passenger and graph[driver_id].driver:
+      graph[driver_id].AddSharing(passenger_id)
+
+def GetDrivers():
+  drivers = []
+  for i in graph.keys(): 
+    if graph[i].driver:
+      drivers.append(graph[i])
+  return drivers
+
+# Activate the right vertices in graph G according to the iterator
+# code provided.
+def ActivateCombination(binary_code):
+  for i in graph.keys(): 
+    bit = 1 << int(i) - 1
+    activate = (int(binary_code) & bit) != 0
+    graph[i].activated = activate
+
+def GetGraphIndex():
+  binary_code = 0
+  for i in graph.keys(): 
+    bit = 1 << int(i) - 1
+    if graph[i].activated:
+      binary_code += bit 
+  return binary_code
+
+def GetPassengersByIndexDifference(j, prev_j):
+  ActivateCombination(j)
+
+  passengers = []
+  binary_code = int(prev_j)
+  for i in graph.keys(): 
+    bit = 1 << int(i) - 1
+    activate = (binary_code & bit) != 0
+    if graph[i].activated and not activate:
+      passengers.append(graph[i])
+  return passengers
+
 def WriteOutput(filename):
   out = open(filename, 'w+')
 
-  LoadSavedCursors()
   drivers = []
   for i in graph.keys(): 
-    if graph[i].GetRole() == DRIVER and len(graph[i].extra_passengers) > 0: 
+    if graph[i].driver and len(graph[i].final_passengers) > 0: 
       drivers.append(graph[i])
 
   out.write(str(len(drivers)) + " " + str(float(max_benefit)) + "\n")
   print len(drivers), float(max_benefit)
   for driver in drivers:
-    driver.extra_passengers.sort()
-    out.write(str(driver.trip_id) + " " + ' '.join(driver.extra_passengers) + "\n")
-    print str(driver.trip_id), ' '.join(driver.extra_passengers)
+    out.write(str(driver.trip_id) + " " + ' '.join(driver.final_passengers) + "\n")
+    print str(driver.trip_id), ' '.join(driver.final_passengers)
+
+def DPMaxBenefit():
+  v_combinations = 2**len(graph)
+  drivers = GetDrivers()
+  
+  b_max = np.ndarray((len(drivers), v_combinations))
+  prev_j = np.ndarray((len(drivers), v_combinations))
+  
+  last_driver = None
+  for i, val in enumerate(drivers):
+    for j in range(v_combinations):
+      ActivateCombination(j)
+      if not drivers[i].activated:
+        if i > 0:
+          b_max[i][j] = b_max[i - 1][j]
+          prev_j[i][j] = j
+        else:
+          b_max[i][j] = 0
+        continue
+  
+      max_prev_j = -1
+      max_benefit = 0
+      if i > 0:
+        # Not taking any passengers.
+        max_prev_j = j
+        max_benefit = b_max[i - 1][j]
+  
+      drivers[i].activated = False
+      p_combs = drivers[i].GetPassengerCombinations()
+      for p_comb in p_combs:
+        if len(p_comb) == 0:
+          continue
+  
+        invalid = False
+        total_passengers = 0
+        for p in p_comb:
+          if not graph[p].activated:
+            invalid = True
+            break
+          total_passengers += graph[p].num_passengers
+        
+        if total_passengers > drivers[i].vacant_seats or invalid: 
+          continue;
+  
+        benefit = 0
+        for p in p_comb:
+          graph[p].activated = False
+          benefit += graph[p].benefit
+  
+        j_index = GetGraphIndex()
+        if i > 0:
+          benefit += b_max[i - 1][j_index]
+
+        if (benefit > max_benefit):
+          max_benefit = benefit
+          max_prev_j = j_index
+  
+        for p in p_comb:
+          graph[p].activated = True
+        
+      b_max[i][j] = max_benefit
+      if i > 0:
+        prev_j[i][j] = max_prev_j
+      else: 
+        prev_j[i][j] = -1
+  
+  max_benefit = 0
+  i = len(drivers) - 1
+  best_j = 0
+  for j in range(v_combinations):
+    if b_max[i][j] > max_benefit:
+      max_benefit = b_max[i][j]
+      best_j = j
+
+  while (i >= 0):
+    best_prev_j = 0
+    if i > 0:
+      best_prev_j = prev_j[int(i)][int(best_j)]
+
+    passengers = GetPassengersByIndexDifference(best_j, best_prev_j)
+    drivers[i].SetFinalPassengers(passengers)
+    best_j = best_prev_j
+    i -= 1
+
+  return max_benefit
 
 # =================================
 # Main
@@ -197,5 +217,6 @@ if len(sys.argv) != 3:
   sys.exit()
 
 ReadInput(sys.argv[1])
-CalculateMaxBenefit() 
+
+max_benefit = DPMaxBenefit() 
 WriteOutput(sys.argv[2])
