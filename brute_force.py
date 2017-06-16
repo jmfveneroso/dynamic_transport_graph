@@ -179,6 +179,7 @@ def WriteOutput(filename):
   for i in graph.keys(): 
     if graph[i].GetRole() == DRIVER and len(graph[i].extra_passengers) > 0: 
       drivers.append(graph[i])
+  drivers.sort(key = lambda x: x.trip_id)
 
   out.write(str(len(drivers)) + " " + str(float(max_benefit)) + "\n")
   print len(drivers), float(max_benefit)
@@ -197,5 +198,8 @@ if len(sys.argv) != 3:
   sys.exit()
 
 ReadInput(sys.argv[1])
+t0 = time.time()
 CalculateMaxBenefit() 
+ms = (time.time() - t0) * 1000
 WriteOutput(sys.argv[2])
+print "ms:", ms

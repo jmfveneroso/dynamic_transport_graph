@@ -333,55 +333,121 @@ calcula o benefício total do conjunto de passageiros selecionados pelo \textit{
 
 \section{Experimentos}
 
+% \begin{figure}
+%   \center
+%   \includegraphics[width=128px]{graph.png}
+%   \caption{Número de vértices X Tempo de execução}
+%   \label{fig:execution_time}
+% \end{figure}
+
 \begin{figure}
-  \center
-  \includegraphics[width=128px]{graph.png}
-  \caption{Número de vértices X Tempo de execução}
-  \label{fig:execution_time}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    xlabel={Número de vértices do grafo completo},
+    ylabel={Tempo de execução (s)},
+    xmin=0, xmax=20,
+    ymin=0, ymax=12000,
+    legend pos=north east,
+    ymajorgrids=true,
+    grid style=dashed,
+    scaled ticks=false
+]
+\pgfplotstableread{brute.dat}\brute;
+\pgfplotstableread{dynamic.dat}\dynamic;
+\pgfplotstableread{greedy.dat}\greedy;
+ 
+\addplot [ 
+           color=blue, 
+           mark=*, 
+           mark size=0.5pt, 
+         ]
+         table
+         [
+           x expr=\thisrowno{0}, 
+           y expr=\thisrowno{2}
+         ] {\brute};
+
+\addplot [ 
+           color=red, 
+           % only marks, 
+           mark=*, 
+           mark size=0.5pt, 
+         ]
+         table
+         [
+           x expr=\thisrowno{0}, 
+           y expr=\thisrowno{2}
+         ] {\dynamic};
+
+\addplot [ 
+           color=green, 
+           % only marks, 
+           mark=*, 
+           mark size=0.5pt, 
+         ]
+         table
+         [
+           x expr=\thisrowno{0}, 
+           y expr=\thisrowno{2}
+         ] {\greedy};
+
+\addlegendentry{Força bruta}
+\addlegendentry{P. dinâmica}
+\addlegendentry{Guloso}
+\end{axis}
+\end{tikzpicture}
+\caption{Desempenho das abordagens força bruta, programação dinâmica e gulosa}
+\label{fig:execution_time}
 \end{figure}
 
 \begin{table}
 \centering
-\begin{tabular}{ |l|l|l|l| }
+\begin{tabular}{ |l|l|l|l|l|l|l| }
   \hline
-  Vértices & Algoritmo Guloso & Algoritmo Exato & Aproximação \\
+  V & A & Exato & Guloso & Aproximação & Exato (ms) & Guloso (ms) \\
   \hline
-  1  & 65               & 233106 & 233106\% \\
-  2  & 33               & 220774 & 220774\% \\
-  3  & 22               & 220127 & 220127\% \\               
-  4  & 15               & 278959 & 278959\% \\               
-  5  & 13               & 211959 & 211959\% \\              
-  6  & 7                & 223152 & 223152\% \\               
-  7  & 4                & 247336 & 247336\% \\               
-  8  & 2                & 285716 & 285716\% \\               
-  9  & 2                & 235183 & 235183\% \\
-  10 & 2                & 302967 & 302967\% \\               
-  11 & 2                & 302967 & 302967\% \\               
-  12 & 2                & 302967 & 302967\% \\               
-  13 & 2                & 302967 & 302967\% \\               
-  14 & 2                & 302967 & 302967\% \\               
-  15 & 2                & 302967 & 302967\% \\               
-  16 & 2                & 302967 & 302967\% \\               
-  17 & 2                & 302967 & 302967\% \\               
-  18 & 2                & 302967 & 302967\% \\               
-  19 & 2                & 302967 & 302967\% \\               
-  20 & 2                & 302967 & 302967\% \\               
+  1  & 1   &  0.0    & 0.0   & 100\%      & 0   & 0    \\
+  2  & 2   &  70.32  & 70.32 & 100\%      & 0.18 & 0.04 \\
+  3  & 6   &  37.08  & 37.08 & 100\%      & 0.47 & 0.05 \\               
+  4  & 12  &  0.0    & 0.0     & 100\%    & 0.68 & 0.11 \\               
+  5  & 20  &  107.32 & 106.94  & 99.64\%  & 4.5 & 0.08 \\              
+  6  & 30  &  269.12 & 269.12  & 100\%    & 15 & 0.14 \\               
+  7  & 42  &  142.29 & 142.29  & 100\%    & 37 & 0.12 \\               
+  8  & 56  &  209.23 & 209.23  & 100\%    & 171 & 0.25 \\               
+  9  & 72  &  234.84 & 219.12  & 93.31\%  & 677 & 0.32 \\
+  10 & 90  &  218.22 & 218.22  & 100\%    & 2758 & 0.53 \\               
+  11 & 110 & 188.83 & 167.51    & 88.71\% & 13202 & 0.51 \\               
+  12 & 132 & 461.61 & 418.21    & 90.59\% & 54524 & 0.42 \\               
+  13 & 156 & 384.5  & 288.04    & 74.91\% & 246305 & 0.71 \\               
+  14 & 182 & 448.55 & 408.28    & 91.02\% & 1117631 & 0.64 \\               
+  15 & 210 & 611.33 & 464.24    & 75.94\% & 5457820 & 0.63 \\               
+  16 & 240 & -      & 497.9     & -       & -       & 0.69 \\               
+  17 & 272 & -      & 384.05    & -       & -       & 0.67 \\               
+  18 & 306 & -      & 376.7     & -       & -       & 0.95 \\               
+  19 & 342 & -      & 729.13    & -       & -       & 0.89 \\               
+  20 & 380 & -      & 492.84    & -       & -       & 1.29 \\               
   \hline
 \end{tabular}
 \caption{Aproximação pelo algoritmo guloso}
 \label{tab:greedy_approximation}
 \end{table}
 
-Foram feitos experimentos com grafos completos variando entre 1 e 20 vértices em cada uma dos três paradigmas implementados. A figura
-\ref{fig:execution_time} descreve o desempenho de cada um dos algoritmos propostos. No caso do algoritmo guloso também foi 
-calculado quanto a solução gulosa se aproximou da solução ótima. O resultado está descrito na tabela \ref{tab:greedy_approximation}.
+Foram feitos experimentos com grafos completos variando entre 1 e 20 vértices em cada um dos três paradigmas implementados. 
+Todos os grafos foram gerados aleatoriamente, sendo que todos os vértices podem sempre ser passageiros ou motoristas.
+A figura \ref{fig:execution_time} descreve o desempenho dos algoritmos propostos nos casos de teste. Os algoritmos de força bruta 
+e programação dinâmica sempre chegam na solução exata, sendo que o paradigma de força bruta começou a se tornar impraticável a partir de
+10 vértices e 90 arestas e o paradigma de programação dinâmica começou a se mostrar impraticável a partir de 16 vértices e 240 arestas.
+O algoritmo guloso tem complexidade polinomial e é viável para exemplos muito maiores do que os que foram aqui apresentados, no entanto,
+ele nem sempre chega na solução exata. No caso do algoritmo guloso também foi calculado quanto a solução gulosa se aproximou da solução ótima. 
+Nos testes com até 15 vértices, o algoritmo guloso conseguiu uma aproximação média de 94.27\% da solução exata em um tempo inferior a 1 milisegundo.
+O resultado está descrito na tabela \ref{tab:greedy_approximation}.
 
 \section{Conclusão}
 
 Este relatório descreveu a implementação do trabalho prático 2 da disciplina Projeto e Análise de Algoritmos. Entre as três abordagens
-propostas, a abordagem gulosa apresentou claramente o melhor desempenho chegando a uma aproximação média de 90\% da resposta ótima
-em um tempo 100 vezes menor do que as abordagens exatas. A programação dinâmica não mostrou um ganho muito grande em relação à força
-bruta devido ao \textit{overhead} na montagem da tabela de respostas. No entanto, talvez o resultado seja diferente para grafos 
-significativamente maiores.
+propostas, a abordagem gulosa apresentou claramente o melhor desempenho chegando a uma aproximação média de 94.27\% da resposta ótima
+em um tempo muitas ordens de magnitude menor do que as abordagens exatas. A programação dinâmica mostrou um ganho muito grande de desempenho 
+em relação ao algoritmo de força bruta, no entanto, a abordagem gasta uma quantidade muito maior de memória.
 
 \end{document}

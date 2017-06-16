@@ -173,5 +173,8 @@ if len(sys.argv) != 3:
   sys.exit()
 
 ReadInput(sys.argv[1])
+t0 = time.time()
 max_benefit = GreedyMaxBenefit() 
+ms = (time.time() - t0) * 1000
 WriteOutput(sys.argv[2])
+print "ms:", ms
